@@ -19,6 +19,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     posts = db.relationship('Post', backref='author', lazy='dynamic')
+    scores = db.relationship('Score', backref='player', uselist=False)
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     followed = db.relationship(
@@ -60,6 +61,9 @@ class User(UserMixin, db.Model):
         own = Post.query.filter_by(user_id=self.id)
         return followed.union(own).order_by(Post.timestamp.desc())
 
+    def lucky_scores(self):
+        return Score.query.filter_by(user_id=self.id)
+
     def get_reset_password_token(self, expires_in=600):
         return jwt.encode(
             {'reset_password': self.id, 'exp': time() + expires_in},
@@ -82,6 +86,18 @@ class Post(db.Model):
 
     def __repr__(self):
         return '<Post {}>'.format(self.body)
+
+class Score(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    #game_played = db.Column(db.Integer)
+    #last_play = db.Column(db.DateTime, default=datetime.utcnow)
+    win = db.Column(db.Integer)
+    lose = db.Column(db.Integer)
+    draw = db.Column(db.Integer)
+
+    def __repr__(self):
+        return '<Score {}>'.format(self.win, self.lose, self.draw)
 
 @login.user_loader
 def load_user(id):

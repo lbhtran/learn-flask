@@ -19,6 +19,7 @@ from app.forms import ResetPasswordForm
 
 from app import luckyapp
 from app.forms import LuckyPlayerRollDice
+from app.models import Score
 
 @app.before_request
 def before_request():
@@ -187,19 +188,42 @@ def unfollow(username):
     return redirect(url_for('user', username=username))
 
 @app.route('/lucky', methods=['GET', 'POST'])
+@login_required
 def lucky():
     form = LuckyPlayerRollDice()
+    score = current_user.lucky_scores().first()
+    if score is None:
+        scores = Score(player=current_user, win=0, lose=0, draw=0)
+        db.session.add(scores)
+        db.session.commit()
+        return redirect(url_for('lucky'))
+    else:
+        print(score)
+        #wins = score.win
+        #loses = score.lose
+        #draws = score.draw
     if form.is_submitted():
         your_number = luckyapp.roll_a_dice()
         computer_number = luckyapp.roll_a_dice()
         flash('Your number is {}.'.format(your_number))
         flash('The computer number is {}.'.format(computer_number))
         if your_number > computer_number:
-            flash('Congratulations! You have won')
+            flash('Congratulations! You have won. {}')
+            #scores = Score(player=current_user, win=wins+1)
+            #db.session.add(scores)
+            #db.session.commit()
+            return redirect(url_for('lucky'))
         elif your_number < computer_number:
             flash('Too bad! You lost this round')
+            #scores = Score(player=current_user, lose=loses + 1)
+            #db.session.add(scores)
+            #db.session.commit()
+            return redirect(url_for('lucky'))
         else:
             flash("It's a draw!")
-        return redirect(url_for('lucky'))
-    return render_template('lucky.html', title='Play Lucky', form=form)
+            #scores = Score(player=current_user, draw=draws + 1)
+            #db.session.add(scores)
+            #db.session.commit()
+            return redirect(url_for('lucky'))
+    return render_template('lucky.html', title='Play Lucky', score=score, form=form)
 
