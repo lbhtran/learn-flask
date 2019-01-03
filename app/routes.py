@@ -17,6 +17,9 @@ from app.forms import ResetPasswordRequestForm
 from app.email import send_password_reset_email
 from app.forms import ResetPasswordForm
 
+from app import luckyapp
+from app.forms import LuckyPlayerRollDice
+
 @app.before_request
 def before_request():
     if current_user.is_authenticated:
@@ -182,4 +185,21 @@ def unfollow(username):
     db.session.commit()
     flash('You are not following {}.'.format(username))
     return redirect(url_for('user', username=username))
+
+@app.route('/lucky', methods=['GET', 'POST'])
+def lucky():
+    form = LuckyPlayerRollDice()
+    if form.is_submitted():
+        your_number = luckyapp.roll_a_dice()
+        computer_number = luckyapp.roll_a_dice()
+        flash('Your number is {}.'.format(your_number))
+        flash('The computer number is {}.'.format(computer_number))
+        if your_number > computer_number:
+            flash('Congratulations! You have won')
+        elif your_number < computer_number:
+            flash('Too bad! You lost this round')
+        else:
+            flash("It's a draw!")
+        return redirect(url_for('lucky'))
+    return render_template('lucky.html', title='Play Lucky', form=form)
 
