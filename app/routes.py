@@ -200,14 +200,14 @@ def lucky():
     else:
         #print(score)
         wins = score.win
-        if wins is None:
-            wins = 0
+        #if wins is None:
+        #    wins = 0
         loses = score.lose
-        if loses is None:
-            loses = 0
+        #if loses is None:
+        #    loses = 0
         draws = score.draw
-        if draws is None:
-            draws = 0
+        #if draws is None:
+        #    draws = 0
     if form.is_submitted():
         your_number = luckyapp.roll_a_dice()
         computer_number = luckyapp.roll_a_dice()
