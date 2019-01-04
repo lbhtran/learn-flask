@@ -1,12 +1,11 @@
-<html>
-    <head>
-      {% if title %}
-      <title>{{ title }} - Blog</title>
-      {% else %}
-      <title>Welcome to Blog</title>
-      {% endif %}
-    </head>
-    <body>
+{% extends 'bootstrap/base.html' %}
+
+{% block title %}
+    {% if title %}{{ title }} - Blog{% else %}Welcome to Blog{% endif %}
+{% endblock %}
+
+{% block navbar %}
+    <nav class="navbar navbar-default">
         <div>Blog:
             <a href="{{ url_for('index') }}">Home</a>
             {% if current_user.is_anonymous %}
@@ -18,16 +17,18 @@
             <a href="{{ url_for('logout') }}">Logout</a>
             {% endif %}
         </div>
-        <hr>
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
-        <ul>
             {% for message in messages %}
-            <li>{{ message }}</li>
+            <div class="alert alert-info" role="alert">{{ message }}</div>
             {% endfor %}
-        </ul>
         {% endif %}
         {% endwith %}
-        {% block content %}{% endblock %}
-    </body>
-</html>
+        {% block app_content %}{% endblock %}
+    </div>
+{% endblock %}
