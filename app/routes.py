@@ -192,22 +192,14 @@ def unfollow(username):
 def lucky():
     form = LuckyPlayerRollDice()
     score = current_user.lucky_scores().first()
+    #your_number = None
+    #computer_number = None
     if score is None:
-        scores = Score(player=current_user, win=0, lose=0, draw=0)
+        scores = Score(player=current_user)
         db.session.add(scores)
         db.session.commit()
         return redirect(url_for('lucky'))
-    else:
-        #print(score)
-        wins = score.win
-        #if wins is None:
-        #    wins = 0
-        loses = score.lose
-        #if loses is None:
-        #    loses = 0
-        draws = score.draw
-        #if draws is None:
-        #    draws = 0
+
     if form.is_submitted():
         your_number = luckyapp.roll_a_dice()
         computer_number = luckyapp.roll_a_dice()
@@ -215,20 +207,17 @@ def lucky():
         flash('The computer number is {}.'.format(computer_number))
         if your_number > computer_number:
             flash('Congratulations! You have won')
-            scores = Score(player=current_user, win=wins+1, lose=loses, draw=draws)
-            db.session.add(scores)
+            score.win += 1
             db.session.commit()
             return redirect(url_for('lucky'))
         elif your_number < computer_number:
             flash('Too bad! You lost this round')
-            scores = Score(player=current_user, win=wins, lose=loses+1, draw=draws)
-            db.session.add(scores)
+            score.lose += 1
             db.session.commit()
             return redirect(url_for('lucky'))
         else:
             flash("It's a draw!")
-            scores = Score(player=current_user, win=wins, lose=loses, draw=draws+1)
-            db.session.add(scores)
+            score.draw +=1
             db.session.commit()
             return redirect(url_for('lucky'))
     return render_template('lucky.html', title='Play Lucky', score=score, form=form)

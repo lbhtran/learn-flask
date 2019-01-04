@@ -92,9 +92,9 @@ class Score(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     #game_played = db.Column(db.Integer)
     #last_play = db.Column(db.DateTime, default=datetime.utcnow)
-    win = db.Column(db.Integer)
-    lose = db.Column(db.Integer)
-    draw = db.Column(db.Integer)
+    win = db.Column(db.Integer, default=0)
+    lose = db.Column(db.Integer, default=0)
+    draw = db.Column(db.Integer, default=0)
 
     def __repr__(self):
         return '<Score {}>'.format(self.win, self.lose, self.draw)

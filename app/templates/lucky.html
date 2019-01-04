@@ -2,6 +2,10 @@
 
 {% block content %}
     <h1>Are you feeling lucky?</h1>
+    <p>This is a simple dice rolling game.</p>
+    {% if result=='win' %}<p>Congratulations! You have won</p>{% endif %}
+    {% if result=='lose' %}<p>Too bad! You lost this round</p>{% endif %}
+    {% if result=='draw' %}<p>It's a draw!</p>{% endif %}
     <form action="" method="post">
         <p>{{ form.submit() }}</p>
     </form>
