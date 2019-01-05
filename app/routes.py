@@ -222,3 +222,7 @@ def lucky():
             return redirect(url_for('lucky'))
     return render_template('lucky.html', title='Play Lucky', score=score, form=form)
 
+@app.route('/leaderboard', methods=['GET', 'POST'])
+@login_required
+def leaderboard():
+    return render_template('leaderboard.html', title='Leaderboard')
