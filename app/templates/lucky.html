@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %}
     <h1>Are you feeling lucky?</h1>
@@ -6,9 +7,11 @@
     {% if result=='win' %}<p>Congratulations! You have won</p>{% endif %}
     {% if result=='lose' %}<p>Too bad! You lost this round</p>{% endif %}
     {% if result=='draw' %}<p>It's a draw!</p>{% endif %}
-    <form action="" method="post">
-        <p>{{ form.submit() }}</p>
-    </form>
+    <div class="row">
+        <div class="col-md-4">
+            {{ wtf.quick_form(form) }}
+        </div>
+    </div>
     <p>Wins: {{ score.win }}</p>
     <p>Loses: {{ score.lose }}</p>
     <p>Draws: {{ score.draw }}</p>
