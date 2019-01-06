@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <h1>Leaderboard</h1>
+    <table class="table">
+        <tr>
+            <th scope="col">Position</th>
+            <th scope="col">Player Name</th>
+            <th scope="col">Wins</th>
+            <th scope="col">Loses</th>
+            <th scope="col">Draws</th>
+        </tr>
+        {% set count = namespace(a=1) %}
+        {% for score in scores %}
+            {% if score.player.username %}
+                <tr>
+                    <td>
+                        {{ count.a }}
+                    </td>
+                    <td>
+                        {{ score.player.username }}
+                    </td>
+                    <td>
+                        {{ score.win }}
+                    </td>
+                    <td>
+                        {{ score.lose }}
+                    </td>
+                    <td>
+                        {{ score.draw }}
+                    </td>
+                </tr>
+                {% set count.a = count.a + 1 %}
+            {% endif %}
+        {% endfor %}
+    </table>
+{% endblock %}
