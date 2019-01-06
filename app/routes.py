@@ -225,4 +225,5 @@ def lucky():
 @app.route('/leaderboard', methods=['GET', 'POST'])
 @login_required
 def leaderboard():
-    return render_template('leaderboard.html', title='Leaderboard')
+    scores = Score.query.order_by(Score.win.desc(),Score.lose.asc(),Score.draw.desc())
+    return render_template('leaderboard.html', title='Leaderboard', scores=scores)
