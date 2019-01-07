@@ -6,6 +6,7 @@ from flask_login import LoginManager
 from flask_mail import Mail
 from flask_bootstrap import Bootstrap
 from flask_moment import Moment
+from flask_babel import Babel
 import logging
 from logging.handlers import SMTPHandler
 from logging.handlers import RotatingFileHandler
@@ -21,6 +22,7 @@ login.login_view = 'login'
 
 mail = Mail(app)
 moment = Moment(app)
+babel = Babel(app)
 
 from app import routes, models, errors
 
@@ -51,3 +53,7 @@ if not app.debug:
 
     app.logger.setLevel(logging.INFO)
     app.logger.info('Flaskblog startup')
+
+@babel.localeselector
+def get_locale():
+    return request.accept_languages.best_match(app.config['LANGUAGES'])
