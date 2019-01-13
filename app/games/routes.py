@@ -58,8 +58,10 @@ def blackjack():
         db.session.commit()
         return redirect(url_for('games.blackjack'))
 
-    if form.is_submitted():
-        return redirect(url_for('games.blackjack'))
+    if form.validate_on_submit():
+        if form.play.data:
+            reveal_card = 'Yes'
+        return redirect(url_for('games.blackjack', reveal_card=reveal_card))
 
     return render_template('games/blackjack.html', title='Play BlackJack', score=score, form=form, my_card1=my_card1, my_card2=my_card2)
 
