@@ -102,7 +102,7 @@ class User(UserMixin, db.Model):
         own = Post.query.filter_by(user_id=self.id)
         return followed.union(own).order_by(Post.timestamp.desc())
 
-    def lucky_scores(self):
+    def game_scores(self):
         return Score.query.filter_by(user_id=self.id)
 
     def get_reset_password_token(self, expires_in=600):
