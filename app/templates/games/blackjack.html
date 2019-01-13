@@ -3,8 +3,8 @@
 
 {% block app_content %}
     <h1>BlackJack, yo!</h1>
-        <p>Your first card is: {{ my_card1 }}</p>
-        <p>Your second card is: {{ my_card2 }}</p>
+        <p>Your first card is: {{ my_card1.value }}</p>
+        <p>Your second card is: {{ my_card2.value }}</p>
     <div class="row">
         <div class="col-md-4">
             {{ wtf.quick_form(form) }}
