@@ -51,6 +51,7 @@ def blackjack():
     score = current_user.game_scores().first()
     my_card1 = Card('S','4',False)
     my_card2 = Card('D','8',True)
+    reveal_card = False
 
     if score is None:
         scores = Score(player=current_user)
@@ -60,10 +61,10 @@ def blackjack():
 
     if form.validate_on_submit():
         if form.play.data:
-            reveal_card = 'Yes'
-        return redirect(url_for('games.blackjack', reveal_card=reveal_card))
+            reveal_card = True
 
-    return render_template('games/blackjack.html', title='Play BlackJack', score=score, form=form, my_card1=my_card1, my_card2=my_card2)
+    return render_template('games/blackjack.html', title='Play BlackJack', score=score, form=form,
+                           my_card1=my_card1, my_card2=my_card2, reveal_card=reveal_card)
 
 
 
