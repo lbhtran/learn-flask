@@ -7,49 +7,48 @@ from app.models import Score
 from app.games import bp
 from app.games.forms import LuckyPlayerRollDice, PlayBlackJack
 from app.games.lucky import roll_a_dice
-from app.games.blackjack import Card
+from app.games.blackjack import Card, Deck
 
 @bp.route('/lucky', methods=['GET', 'POST'])
 @login_required
 def lucky():
     form = LuckyPlayerRollDice() ## this can become a generic function to submit a play
     score = current_user.game_scores().first()
-    #your_number = None
-    #computer_number = None
+    your_number = None
+    computer_number = None
+    submitted = None
     if score is None:
         scores = Score(player=current_user)
         db.session.add(scores)
         db.session.commit()
         return redirect(url_for('games.lucky'))
 
-    if form.is_submitted(): ## this needs to be rewritten to be reusable
-        your_number = roll_a_dice()
-        computer_number = roll_a_dice()
-        flash(_('Your number is %(your_number)s.', your_number=your_number))
-        flash(_('The computer number is %(computer_number)s.', computer_number=computer_number))
+    if form.validate_on_submit(): ## this needs to be rewritten to be reusable
+        if form.submit.data:
+            submitted = True
+            your_number = roll_a_dice()
+            computer_number = roll_a_dice()
+
         if your_number > computer_number:
-            flash(_('Congratulations! You have won'))
             score.win += 1
             db.session.commit()
-            return redirect(url_for('games.lucky'))
         elif your_number < computer_number:
-            flash(_('Too bad! You lost this round'))
             score.lose += 1
             db.session.commit()
-            return redirect(url_for('games.lucky'))
         else:
-            flash(_("It's a draw!"))
-            score.draw +=1
+            score.draw += 1
             db.session.commit()
-            return redirect(url_for('games.lucky'))
-    return render_template('games/lucky.html', title='Play Lucky', score=score, form=form)
+
+    return render_template('games/lucky.html', title='Play Lucky', score=score, form=form,
+                           your_number=your_number, computer_number=computer_number, submitted=submitted)
 
 @bp.route('/blackjack', methods=['GET', 'POST'])
 @login_required
 def blackjack():
     form = PlayBlackJack()
+    deck = Deck()
     score = current_user.game_scores().first()
-    my_card1 = Card('S','4',False)
+    my_card1 = Deck.dealCard(deck)
     my_card2 = Card('D','8',True)
     reveal_card = False
 
