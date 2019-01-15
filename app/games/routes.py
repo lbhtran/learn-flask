@@ -6,13 +6,14 @@ from app import db
 from app.models import Score
 from app.games import bp
 from app.games.forms import LuckyPlayerRollDice, PlayBlackJack
-from app.games.lucky import roll_a_dice
+from app.games.lucky import roll_a_dice, Dice
 from app.games.blackjack import Card, Deck
 
 @bp.route('/lucky', methods=['GET', 'POST'])
 @login_required
 def lucky():
     form = LuckyPlayerRollDice() ## this can become a generic function to submit a play
+    dice = Dice()
     score = current_user.game_scores().first()
     your_number = None
     computer_number = None
@@ -26,8 +27,8 @@ def lucky():
     if form.validate_on_submit(): ## this needs to be rewritten to be reusable
         if form.submit.data:
             submitted = True
-            your_number = roll_a_dice()
-            computer_number = roll_a_dice()
+            your_number = dice.roll()
+            computer_number = dice.roll()
 
         if your_number > computer_number:
             score.win += 1

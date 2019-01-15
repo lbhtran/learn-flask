@@ -14,8 +14,12 @@ class Dice(object):
 
 class Lucky(object):
     def __init__(self):
-        self.humanplayer = Dice().roll()
-        self.computerplayer = Dice().roll()
+        self.dice = Dice()
+        self.humanplayer = self.dice.roll()
+        self.computerplayer = self.dice.roll()
+        self.win = False
+        self.lose = False
+        self.draw = False
 
         if self.humanplayer > self.computerplayer:
             self.win = True
