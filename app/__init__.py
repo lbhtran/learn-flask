@@ -50,6 +50,9 @@ def create_app(config_class=Config):
     from app.games import bp as games_bp
     app.register_blueprint(games_bp)
 
+    from app.misc import bp as misc_bp
+    app.register_blueprint(misc_bp)
+
     from app import models
 
     if not app.debug:
